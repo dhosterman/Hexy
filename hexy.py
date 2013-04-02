@@ -19,7 +19,7 @@ hexy = hexapod(controller)                  #Hexy!
 __builtins__.hexy = hexy                    #sets hexy as global variable for all modules
 __builtins__.floor = 60                     #minimum level the legs will reach
 arguments = sys.argv                        #arguments passed to hexy on startup
-debut = False
+debug = False
 
 def generateMoves():
     #create list of moves from Moves folder
