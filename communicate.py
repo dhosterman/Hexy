@@ -5,6 +5,9 @@
 #To do: order moves from longest to shortest in order of operations
 #allow for 3 word move names
 #teach Hexy to provide a list of possible moves
+#divide inputs into multiple sections to allow for compound inputs
+#add learning of inputs
+#add clarification of inputs
 
 #sys configuration
 import sys
