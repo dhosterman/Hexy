@@ -1,7 +1,8 @@
 hexy
 ====
 
-Modifications to Hexy the Hexapod (http://arcbotics.com/products/hexy/) control files
+Modifications to Hexy the Hexapod (http://arcbotics.com/products/hexy/) control files including text interface, 
+memory, rudimentary personality, and rudimentary AI.
 
 ##What is it?
 
