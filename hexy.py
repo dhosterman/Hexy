@@ -78,6 +78,7 @@ def getCommands(moves):
         if user_input.isMove()[0] == True:
             try:
                 move(user_input.read())
+                print("Hexy: Yes, I can %s." % user_input.read().lower())
             except:
                 print("Hexy: I'm afraid I can't do that right now.")
                 if debug: traceback.print_exc()
