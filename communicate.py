@@ -3,13 +3,16 @@
 #"""
 
 #To do: order moves from longest to shortest in order of operations
+#allow for 3 word move names
+#teach Hexy to provide a list of possible moves
 
 #sys configuration
 import sys
 sys.path.append("Moves")        #include the Moves folder
 
 #imports
-import os, re
+import os, re, sqlite3, ast
+from random import randrange
 
 class Input(object):
     """Receive and parse input from Hexy."""
@@ -79,7 +82,18 @@ class Input(object):
 
     def inputParse(self):
         #parse user input that isn't a move
-        return "goodbye" in self.split_input
+        curs = sqlite3.connect("memory.sql").cursor()
+        inputs = curs.execute("""select * from inputs join outputs on 
+                                 output_id = outputs.id""").fetchall()
+        for line in inputs:
+            inputs = ast.literal_eval(line[1])
+            mood = line[4]
+            action = line[5]
+            responses = ast.literal_eval(line[6])
+            for string in inputs:
+                if string.lower() in self.user_input.lower():
+                    return responses[randrange(len(responses))], action
+            return "I don't understand what you mean.", 0
 
     def getMoves(self):
         #determine if an input relates to a move

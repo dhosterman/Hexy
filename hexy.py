@@ -1,5 +1,3 @@
-#To do: add debug flag for tracebacks
-
 #sys configuration
 import sys
 sys.dont_write_bytecode = True  #don't clutter folders with .pyc files
@@ -21,6 +19,7 @@ hexy = hexapod(controller)                  #Hexy!
 __builtins__.hexy = hexy                    #sets hexy as global variable for all modules
 __builtins__.floor = 60                     #minimum level the legs will reach
 arguments = sys.argv                        #arguments passed to hexy on startup
+debut = False
 
 def generateMoves():
     #create list of moves from Moves folder
@@ -81,12 +80,13 @@ def getCommands(moves):
                 move(user_input.read())
             except:
                 print("Hexy: I'm afraid I can't do that right now.")
-                #traceback.print_exc()
+                if debug: traceback.print_exc()
             move("Killall")
-        elif user_input.inputParse() == True:
-                loop = False
         else:
-            print("Hexy: I don't understand what you want me to do.")
+            output, action = user_input.inputParse()
+            print("Hexy: " + output)
+            if action == 1:
+                loop = False
     memory.write([start_time, datetime.now(), 1])       #write interaction log to memory
             
 if __name__ == "__main__":
@@ -104,7 +104,7 @@ if __name__ == "__main__":
                 time.sleep(1)
             except:
                 print("Hexy: I don't understand what you want me to do.")
-                #traceback.print_exc()
+                if debug: traceback.print_exc()
                 move("Killall")
                 break
 
@@ -114,5 +114,5 @@ if __name__ == "__main__":
     
     del hexy
     del controller
-    print("Hexy: Goodbye!")
+    #print("Hexy: Goodbye!")
     os._exit(0)

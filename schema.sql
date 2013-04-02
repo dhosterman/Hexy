@@ -19,3 +19,30 @@ INSERT INTO INTERACTION_TYPES (
     description
     )
 VALUES (1, "General Interaction");
+
+CREATE TABLE IF NOT EXISTS
+INPUTS (
+    id INTEGER PRIMARY KEY,
+    input BLOB,
+    output_id INTEGER
+    );
+
+CREATE TABLE IF NOT EXISTS
+OUTPUTS (
+    id INTEGER PRIMARY KEY,
+    mood INTEGER,
+    action INTEGER,
+    output TEXT
+    );
+
+INSERT INTO INPUTS (
+    input,
+    output_id
+    )
+VALUES ("['goodbye', 'sayonara']", 1);
+
+INSERT INTO OUTPUTS (
+    mood,
+    action,
+    output)
+VALUES (1, 1, "['Goodbye!', 'See you later!']");
