@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS
 INPUTS (
     id INTEGER PRIMARY KEY,
     input BLOB,
+    clarification TEXT,
     output_id INTEGER
     );
 
@@ -37,9 +38,10 @@ OUTPUTS (
 
 INSERT INTO INPUTS (
     input,
+    clarification,
     output_id
     )
-VALUES ("['goodbye', 'sayonara']", 1);
+VALUES ("['goodbye', 'sayonara']", "Are you going away for a while?", 1);
 
 INSERT INTO OUTPUTS (
     mood,

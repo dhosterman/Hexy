@@ -7,7 +7,6 @@
 #teach Hexy to provide a list of possible moves
 #divide inputs into multiple sections to allow for compound inputs
 #add learning of inputs
-#add clarification of inputs
 
 #sys configuration
 import sys
@@ -88,14 +87,30 @@ class Input(object):
         curs = sqlite3.connect("memory.sql").cursor()
         inputs = curs.execute("""select * from inputs join outputs on 
                                  output_id = outputs.id""").fetchall()
+        possible_outputs = []
         for line in inputs:
-            inputs = ast.literal_eval(line[1])
-            mood = line[4]
-            action = line[5]
-            responses = ast.literal_eval(line[6])
-            for string in inputs:
+            input_id = line[0]
+            strings = ast.literal_eval(line[1])
+            clarification = line[2]
+            mood = line[5]
+            action = line[6]
+            responses = ast.literal_eval(line[7])
+            for string in strings:
                 if string.lower() in self.user_input.lower():
-                    return responses[randrange(len(responses))], action
+                    possible_outputs.append((input_id, clarification, action, responses))
+        
+        #handle multiple instances of the same input string by asking clarifying questions            
+        if len(possible_outputs) > 1:
+            for choice in range(len(possible_outputs)):
+                print("Hexy: " + possible_outputs[choice][1])
+                query = raw_input("Me: ")
+                if query.lower() in ["yes", "yes!", "yes."]:
+                    return possible_outputs[choice][3][randrange(len(possible_outputs[choice][3]))], possible_outputs[choice][2]
+            else:
+                return "Then I'm sorry, I really don't understand what you mean. Can you rephrase?", 0
+        elif len(possible_outputs) == 1:
+             return possible_outputs[0][3][randrange(len(possible_outputs[0][3]))], possible_outputs[0][2]
+        else:
             return "I don't understand what you mean.", 0
 
     def getMoves(self):
