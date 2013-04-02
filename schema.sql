@@ -37,14 +37,17 @@ OUTPUTS (
     );
 
 INSERT INTO INPUTS (
+    id,
     input,
     clarification,
     output_id
     )
-VALUES ("['goodbye', 'sayonara']", "Are you going away for a while?", 1);
+VALUES (1, "['goodbye', 'sayonara']", "Are you going away for a while?", 1),
+    (2, "['goodbye']", "Should I go to sleep now?", 1);
 
 INSERT INTO OUTPUTS (
+    id,
     mood,
     action,
     output)
-VALUES (1, 1, "['Goodbye!', 'See you later!']");
+VALUES (1, 1, 1, "['Goodbye!', 'See you later!', 'Goodnight!']");
