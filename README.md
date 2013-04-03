@@ -22,6 +22,9 @@ implement memory and personality modules for Hexy.
 
 You'll need to flash the new Arduino code to Hexy's Servotor in order to manually activate the ultrasound sensor.
 This step isn't necessary if you don't want to use that functionality.
+
+You will also need to run database.py to initially create your Hexy database.
+
 Otherwise, just download and run hexy.py and everything should work out fine assuming you could get the original
 software to work. (Note: You will need an offsets.cfg file if you want to use offsets.)
 
