@@ -96,6 +96,7 @@ if __name__ == "__main__":
     __builtins__.move = move            #make move a global variable for all modules
     moves = generateMoves()             #generate list of moves from the Moves folder
     loadOffsets()                       #load offsets and calibrate Hexy
+    import database
 
     #this block performs moves that are entered as arguments from the command line activation of Hexy
     if len(arguments) > 1:              #perform argument list of commands

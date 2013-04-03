@@ -10,7 +10,6 @@ class Memories(object):
     """Memories object."""
     def __init__(self, database = "memory"):
         self.file = database + ".sql"
-        self.initialize()
 
     def open(self):
         #return a connection to the SQLite3 database file
@@ -21,25 +20,10 @@ class Memories(object):
         #have Hexy start to forget things after a couple of weeks
         pass
 
-
 class Interactions(Memories):
     """Memories about interaction times."""
     def __init__(self, database = "memory"):
         super(Interactions, self).__init__(database)
-
-    def initialize(self):
-        conn, curs = self.open()
-        curs.execute (
-                        """CREATE TABLE IF NOT EXISTS
-                            INTERACTIONS (
-                                id INTEGER PRIMARY KEY,
-                                start_time TIMESTAMP,
-                                stop_time TIMESTAMP,
-                                duration REAL,
-                                type INT
-                                )"""
-        )
-        conn.commit()
 
     def write(self, values):
         #write an interaction to Hexy's memory
