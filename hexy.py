@@ -19,7 +19,7 @@ hexy = hexapod(controller)                  #Hexy!
 __builtins__.hexy = hexy                    #sets hexy as global variable for all modules
 __builtins__.floor = 60                     #minimum level the legs will reach
 arguments = sys.argv                        #arguments passed to hexy on startup
-debug = False
+debug = True
 
 def generateMoves():
     #create list of moves from Moves folder
@@ -75,19 +75,14 @@ def getCommands(moves):
     while loop:
         time.sleep(1)                       #or the command prompt doesn't always appear
         user_input = Input(raw_input("Me: "))
-        if user_input.isMove()[0] == True:
-            try:
-                move(user_input.read())
-                print("Hexy: Yes, I can %s." % user_input.read().lower())
-            except:
-                print("Hexy: I'm afraid I can't do that right now.")
-                if debug: traceback.print_exc()
-            move("Killall")
-        else:
-            output, action = user_input.inputParse()
-            print("Hexy: " + output)
-            if action == 1:
+        try:
+            if not user_input.isBasicMove():
+                move("Killall")
                 loop = False
+        except:
+            if debug: traceback.print_exc()
+            print("Hexy: I'm sorry, I don't understand.")
+            pass
     memory.write([start_time, datetime.now(), 1])       #write interaction log to memory
             
 if __name__ == "__main__":

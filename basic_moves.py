@@ -1,12 +1,12 @@
-#"""
+8#"""
 # Basic moves for Hexy.
 #"""
 
 #imports
 import time
 
-def moveForward(steps):
-	#move forward a number of complete steps
+def walkForward(steps = 2):
+	# walk forward a number of complete steps
 	deg = 25
 	midFloor = 30
 	hipSwing = 25
@@ -29,9 +29,10 @@ def moveForward(steps):
 		hexy.RM.setHipDeg(-hipSwing,stepTime=0.5)
 		hexy.LB.setHipDeg(-deg+hipSwing,stepTime=0.5)
 		time.sleep(0.6)
+
 		
-def moveBackward(steps):
-	#move backward a number of complete steps
+def walkBackward(steps = 2):
+	# move backward a number of complete steps
 	deg = 25
 	midFloor = 30
 	hipSwing = 25
@@ -55,8 +56,8 @@ def moveBackward(steps):
 		hexy.LB.setHipDeg(-deg-hipSwing,stepTime=0.5)
 		time.sleep(0.6)
 		
-def rotateLeft(degrees):
-	#rotate left a number of degrees in one or more complete moves
+def turnLeft(degrees = 40):
+	# rotate left a number of degrees in one or more complete moves
 	deg = 40
 	moves = int(degrees) // deg
 	remainder = int(degrees) % deg
@@ -105,8 +106,8 @@ def rotateLeft(degrees):
 		hexy.LB.replantFoot(-remainder,stepTime=0.3)
 		time.sleep(0.5)
 		
-def rotateRight(degrees):
-	#rotate right a number of degrees in one or more complete moves
+def turnRight(degrees = 40):
+	# rotate right a number of degrees in one or more complete moves
 	deg = -40
 	moves = int(degrees) // abs(deg)
 	remainder = int(degrees) % deg
@@ -156,7 +157,7 @@ def rotateRight(degrees):
 		time.sleep(0.5)
 
 def getDistance():
-	#return distance
+	# return distance
 	distance = "CM: 0.00"
 
 	while distance.strip() == "CM: 0.00":
@@ -165,8 +166,8 @@ def getDistance():
 	
 	return float(distance.strip()[3:])
 
-def scanDistance(degrees):
-	#scan a total number of degrees in front of Hexy and return list of distances
+def scanDistance(degrees = 90):
+	# scan a total number of degrees in front of Hexy and return list of distances
 	distances = []
 	degree = degrees // 2
 
@@ -189,3 +190,10 @@ def scanDistance(degrees):
 	distances.sort(key=lambda tup: tup[1])
 	time.sleep(.5)
 	return distances
+
+# alternative names for moves start here
+def moveForward(steps = 2):
+	walkForward(steps)
+
+def moveBackward(steps = 2):
+	walkBackward(steps)

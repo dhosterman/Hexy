@@ -2,126 +2,61 @@
 # This is a module that manages communication with Hexy.
 #"""
 
-#To do: order moves from longest to shortest in order of operations
-#allow for 3 word move names
-#teach Hexy to provide a list of possible moves
-#divide inputs into multiple sections to allow for compound inputs
-#add learning of inputs
-
-#sys configuration
+# sys configuration
 import sys
-sys.path.append("Moves")        #include the Moves folder
+sys.path.append("./Moves/")        # include the Moves folder
 
-#imports
-import os, re, sqlite3, ast
+# imports
+import os, re, sqlite3, ast, basic_moves
 from random import randrange
 
-class Input(object):
-    """Receive and parse input from Hexy."""
+class Input:
+    """
+    Receive and parse input from Hexy.
+    """
     def __init__(self, user_input):
         self.user_input = user_input
-        self.split_input = self.getSplitInput()
-        self.is_move, self.move_name = self.isMove()
-        self.type = self.getType()
 
     def getSplitInput(self):
-        #split input into list of lower-case strings and remove punctuation
-        punctuation = "!?.,"
-        return [x.strip(punctuation) for x in self.user_input.lower().split()]
+        """
+        str -> list of strings
 
-    def getType(self):
-        #determine the kind of input
-        #either a question or a statement
-        questions = ["?"]
-        statements = [".", "!"]
-        for word in self.user_input.split():
-            for mark in questions:
-                if mark in word:
-                    return "question"
-                    break
-            for mark in statements:
-                if mark in word:
-                    return "statement"
-                    break
-        return "unknown"
+        Split input into a list or lists of important words to be processed.
+        Some words should be omitted because they're not important.
+        Some words should function as identification that there are multiple commands
+        that must be processed.
+        """
+        result = re.findall("[a-z]+|[0-9]+", self.user_input.lower())
+        return result
 
-    def separateInput(self):
-        #separate an input string into individual queries
-        pass
+    def isBasicMove(self, perform = True):
+        """
+        list of strings -> bool, function call
 
-    def read(self):
-        #return just the name of the move
-        return self.move_name.title()
+        Check to see if self.user_input is a basic move and return True if it is. Also,
+        perform the move if perform = True.
+        """
 
-    def isMove(self):
-        #determine if an input relates to a move
-        #generate a list of moves
-        moves = []
-        is_move = False
-
-        for fileName in os.listdir("Moves"):
-            if os.path.splitext(fileName)[1] == '.py':
-                fileName = os.path.splitext(fileName)[0]
-                s1 = re.sub('(.)([A-Z][a-z]+)', r'\1 \2', fileName)
-                moves.append(s1)
-        for move in moves:
-            position = -1
-            for word in move.split():
-                is_move = word.lower() in self.split_input
-                if is_move == False:
-                    move_name = None
-                    break
-                elif is_move == True and self.split_input.index(word.lower()) == position + 1 or word == move.split()[0]:
-                    position = self.split_input.index(word.lower())
-                else:
-                    is_move = False
-                    move_name = None
-                    break
-            if is_move == True:
-                move_name = move
-                break
-        return is_move, move_name
-
-    def inputParse(self):
-        #parse user input that isn't a move
-        curs = sqlite3.connect("memory.sql").cursor()
-        inputs = curs.execute("""select * from inputs join outputs on 
-                                 output_id = outputs.id""").fetchall()
-        possible_outputs = []
-        for line in inputs:
-            input_id = line[0]
-            strings = ast.literal_eval(line[1])
-            clarification = line[2]
-            mood = line[5]
-            action = line[6]
-            responses = ast.literal_eval(line[7])
-            for string in strings:
-                if string.lower() in self.user_input.lower():
-                    possible_outputs.append((input_id, clarification, action, responses))
-        
-        #handle multiple instances of the same input string by asking clarifying questions            
-        if len(possible_outputs) > 1:
-            for choice in range(len(possible_outputs)):
-                print("Hexy: " + possible_outputs[choice][1])
-                query = raw_input("Me: ")
-                if query.lower() in ["yes", "yes!", "yes."]:
-                    return possible_outputs[choice][3][randrange(len(possible_outputs[choice][3]))], possible_outputs[choice][2]
-            else:
-                return "Then I'm sorry, I really don't understand what you mean. Can you rephrase?", 0
-        elif len(possible_outputs) == 1:
-             return possible_outputs[0][3][randrange(len(possible_outputs[0][3]))], possible_outputs[0][2]
-        else:
-            return "I don't understand what you mean.", 0
-
-    def getMoves(self):
-        #determine if an input relates to a move
-        #generate a list of moves
-        moves = []
-        is_move = False
-
-        for fileName in os.listdir("Moves"):
-            if os.path.splitext(fileName)[1] == '.py':
-                fileName = os.path.splitext(fileName)[0]
-                s1 = re.sub('(.)([A-Z][a-z]+)', r'\1 \2', fileName)
-                moves.append(s1)
-        return moves
+        test_case = self.getSplitInput()
+        move_list = [re.split("([A-Z][a-z]+)", x) for x in dir(basic_moves) if not "__" in x and not "time" in x]
+        move_list = [[y.lower() for y in x if not y == ""] for x in move_list]
+        move_list = [x for x in move_list if x[0] in test_case]
+        if len(move_list) > 0:
+            for word in range(1, max(len(x) for x in move_list)):
+                try:
+                    move_list = [x for x in move_list if x[word] == test_case[test_case.index(x[0])+word]]
+                except IndexError:
+                    pass
+        if len(move_list) < 1 or len(test_case) <= len(move_list):
+            return False
+        elif len(move_list) == 1:
+            print move_list
+            if perform:
+                move = [move_list[0][0]] + [x.title() for x in move_list[0][1:]]
+                try:
+                    parameter = re.sub("[a-z]+", "", test_case[test_case.index(move_list[0][-1:][0])+1])
+                except IndexError:
+                    parameter = ""
+                print parameter
+                eval("basic_moves." + "".join(move) + "(%s)" % (parameter))
+            return True
