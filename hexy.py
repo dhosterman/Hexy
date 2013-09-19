@@ -15,7 +15,7 @@ from communicate import *
 #global variables
 controller = servotorComm.Controller()      #servo controller
 __builtins__.controller = controller
-hexy = hexapod(controller)                  #Hexy!
+hexy = hexapod(controller)                  #Hexy
 __builtins__.hexy = hexy                    #sets hexy as global variable for all modules
 __builtins__.floor = 60                     #minimum level the legs will reach
 arguments = sys.argv                        #arguments passed to hexy on startup
